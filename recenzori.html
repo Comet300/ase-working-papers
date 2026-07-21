@@ -93,7 +93,7 @@ p{ margin:0; }
 .nav-links a{ font-size:.9rem; font-weight:500; color:var(--muted); padding:.5rem .8rem;
   border-radius:var(--r); transition:color .16s,background .16s; }
 .nav-links a:hover{ color:var(--ink); background:var(--surface-2); }
-.nav-links a.is-active{ color:var(--red); font-weight:600; }
+.nav-links a.is-active:not(.btn){ color:var(--red); font-weight:600; }  /* nu recolora butonul CTA (text alb pe roșu) */
 .nav-links .btn--primary{ display:none; }   /* CTA din meniu apare doar pe mobil */
 .nav-actions{ display:flex; align-items:center; gap:.6rem; }
 .icon-btn{ display:inline-grid; place-items:center; width:40px; height:40px; border-radius:var(--r-full);
@@ -101,15 +101,19 @@ p{ margin:0; }
 .icon-btn:hover{ background:var(--surface-2); color:var(--ink); }
 .nav-toggle{ display:none; }
 @media (max-width:900px){
-  .nav-links{ position:absolute; left:0; right:0; top:72px; flex-direction:column; align-items:stretch;
+  .brand{ font-size:.95rem; }                         /* nu mai încape pe 3 rânduri */
+  /* Meniul mobil se ancorează sub antet (top:100%), indiferent de înălțimea lui */
+  .nav-links{ position:absolute; left:0; right:0; top:100%; flex-direction:column; align-items:stretch;
     gap:0; background:#fff; border-bottom:1px solid var(--border); padding:.5rem var(--gutter) 1rem;
     box-shadow:var(--shadow-card); transform:translateY(-8px); opacity:0; pointer-events:none;
-    transition:opacity .2s var(--ease),transform .2s var(--ease); z-index:var(--z-menu); }
+    transition:opacity .2s var(--ease),transform .2s var(--ease); z-index:var(--z-menu);
+    max-height:calc(100vh - 72px); overflow-y:auto; }
   .nav-links a{ padding:.85rem .4rem; border-bottom:1px solid var(--border); }
   body.menu-open .nav-links{ opacity:1; transform:none; pointer-events:auto; }
   .nav-toggle{ display:inline-grid; }
   .nav-actions .btn--primary{ display:none; }
-  .nav-links .btn--primary{ display:inline-flex; margin-top:.75rem; border-bottom:none; }
+  /* CTA din meniu: lățime completă, text centrat */
+  .nav-links .btn--primary{ display:flex; justify-content:center; width:100%; margin-top:.75rem; border-bottom:none; }
 }
 
 /* ---- 6. HERO ------------------------------------------------------------- */
@@ -218,6 +222,15 @@ p{ margin:0; }
 /* ---- 9. DOCUMENTAȚIE / GHID ---------------------------------------------- */
 .doc-layout{ display:grid; grid-template-columns:240px 1fr; gap:clamp(1.5rem,4vw,3rem); align-items:start; }
 .toc{ position:sticky; top:96px; }
+/* Layout-uri responsive refolosibile (înlocuiesc grid-uri inline ca să se poată plia pe mobil) */
+.layout-guide{ display:grid; grid-template-columns:minmax(0,1fr) 300px; gap:clamp(1.5rem,4vw,3rem); align-items:start; }
+.layout-announce{ display:grid; grid-template-columns:1.6fr 1fr; gap:clamp(1.5rem,4vw,3rem); align-items:start; }
+.two-up{ display:grid; grid-template-columns:1fr 1fr; gap:1.5rem; }
+@media (max-width:860px){
+  .doc-layout,.layout-guide{ grid-template-columns:1fr; }
+  .toc{ position:static; margin-bottom:1.25rem; }
+}
+@media (max-width:760px){ .layout-announce,.two-up{ grid-template-columns:1fr; } }
 .toc h4{ font-size:.8rem; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); margin-bottom:.9rem; }
 .toc a{ display:flex; align-items:center; justify-content:space-between; gap:.5rem; padding:.6rem .3rem;
   font-size:.9rem; color:var(--ink); border-bottom:1px solid var(--border); transition:color .16s,transform .16s; }
@@ -282,6 +295,13 @@ p{ margin:0; }
 .stepper__item.is-active .dot{ background:var(--red); color:#fff; border-color:var(--red); }
 .stepper__item.is-done .dot{ background:var(--red-tint); color:var(--red); border-color:var(--red); }
 .stepper__line{ flex:1 1 20px; height:2px; background:var(--border); min-width:16px; }
+@media (max-width:560px){
+  /* Pe mobil rămân doar cerculețele (eticheta pasului apare deja în subtitlu) — fără scroll */
+  .stepper{ gap:.25rem; }
+  .stepper__item{ font-size:0; gap:0; }
+  .stepper__item .dot{ font-size:.78rem; }
+  .stepper__line{ min-width:8px; }
+}
 
 .form-card{ background:var(--surface); border:1px solid var(--border); border-radius:var(--r-lg); padding:clamp(1.5rem,4vw,2rem); box-shadow:var(--shadow-card); }
 .form-card h3{ display:flex; align-items:center; gap:.5rem; font-size:1.2rem; margin-bottom:1.5rem; }
@@ -298,6 +318,12 @@ p{ margin:0; }
 .field-max{ float:right; font-size:.72rem; color:var(--muted-soft); font-weight:600; }
 .form-actions{ display:flex; flex-wrap:wrap; gap:.9rem; justify-content:flex-end; align-items:center; margin-top:1.75rem; }
 .form-actions .spacer{ margin-right:auto; }
+@media (max-width:560px){
+  /* Pe mobil butoanele se stivuiesc pe lățime completă, dimensiuni egale */
+  .form-actions{ flex-direction:column; align-items:stretch; }
+  .form-actions .btn{ width:100%; justify-content:center; }
+  .form-actions .spacer{ margin-right:0; }
+}
 
 /* Panouri pași 2-4 (placeholder) */
 .step-panel{ display:none; }
@@ -425,7 +451,9 @@ p{ margin:0; }
 .footer-col a:hover{ color:#fff; }
 .footer-col p{ font-size:.9rem; line-height:1.7; max-width:34ch; }
 .footer-bottom{ padding-block:1.25rem; font-size:.8rem; color:rgba(255,255,255,.5); }
+.footer-cols.cols-3{ grid-template-columns:2fr 1fr 1fr; }   /* footere cu 3 coloane */
 @media (max-width:720px){ .footer-cols{ grid-template-columns:1fr 1fr; } }
+@media (max-width:480px){ .footer-cols{ grid-template-columns:1fr; } }
 
 /* ---- 15. MIȘCARE --------------------------------------------------------- */
 @keyframes rise{ from{ opacity:0; transform:translateY(14px); } to{ opacity:1; transform:none; } }
