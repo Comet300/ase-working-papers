@@ -1,0 +1,10 @@
+{
+  "name": "ase-working-papers",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Working Papers — Facultatea de Marketing, ASE București. Frontend static, fără build.",
+  "scripts": {
+    "start": "node serve.mjs"
+  }
+}
